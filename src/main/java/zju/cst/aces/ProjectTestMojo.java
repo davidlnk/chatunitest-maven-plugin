@@ -84,7 +84,7 @@ public class ProjectTestMojo
     public boolean stopWhenSuccess;
     @Parameter(property = "noExecution", defaultValue = "false")
     public boolean noExecution;
-    @Parameter(alias = "thread", property = "thread", defaultValue = "false")
+    @Parameter(alias = "thread", property = "thread", defaultValue = "true")
     public boolean enableMultithreading;
     @Parameter(alias = "ruleRepair", property = "ruleRepair", defaultValue = "true")
     public boolean enableRuleRepair;
@@ -100,7 +100,7 @@ public class ProjectTestMojo
     public int testNumber;
     @Parameter(property = "maxRounds", defaultValue = "5")
     public int maxRounds;
-    @Parameter(property = "maxPromptTokens", defaultValue = "2600")
+    @Parameter(property = "maxPromptTokens", defaultValue = "-1")
     public int maxPromptTokens;
     @Parameter(property = "minErrorTokens", defaultValue = "500")
     public int minErrorTokens;
@@ -122,8 +122,6 @@ public class ProjectTestMojo
     public String proxy;
     @Parameter(property = "phaseType",defaultValue = "chatunitest")
     public String phaseType;
-    @Parameter(property = "coverageAnalyzer_jar_path",defaultValue = "D:\\APP\\IdeaProjects\\chatunitest-maven-plugin-corporation\\src\\main\\resources\\jacoco-integration-1.0-SNAPSHOT.jar")
-    public String coverageAnalyzer_jar_path;
     @Parameter(property = "smartUnitTest_jar_path",defaultValue = "D:\\APP\\IdeaProjects\\chatunitest-maven-plugin-corporation\\src\\main\\resources\\smartut-master-1.1.0.jar")
     public String smartUnitTest_path;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -183,6 +181,8 @@ public class ProjectTestMojo
                 .dependencyDepth(dependencyDepth)
                 .model(model)
                 .maxResponseTokens(maxResponseTokens)
+                .maxPromptTokens(maxPromptTokens)
+                .minErrorTokens(minErrorTokens)
                 .url(url)
                 .temperature(temperature)
                 .topP(topP)
