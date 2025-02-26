@@ -190,7 +190,6 @@ public class ProjectTestMojo
                 .presencePenalty(presencePenalty)
                 .proxy(proxy)
                 .phaseType(phaseType)
-                .coverageAnalyzer_jar_path(coverageAnalyzer_jar_path)
                 .dependencyPaths(dependencyPaths)
                 .build();
         if(phaseType.equals("TELPA")){
