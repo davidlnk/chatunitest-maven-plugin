@@ -246,12 +246,13 @@ public class ProjectTestMojo
 
         // Get resolved dependencies
         Set<Artifact> artifacts = result.getArtifacts();
+        File projectArtifactFile = project.getArtifact().getFile(); // Get project's own artifact file
 
         if (!artifacts.isEmpty()) {
             for (Artifact artifact : artifacts) {
                 if (result.isSuccess()) {
                     File jarFile = artifact.getFile();
-                    if (jarFile != null && jarFile.exists()) {
+                    if (jarFile != null && jarFile.exists() && !jarFile.equals(projectArtifactFile)) {
                         dependencyPaths.add(jarFile.getAbsolutePath());
                     }
                 }
