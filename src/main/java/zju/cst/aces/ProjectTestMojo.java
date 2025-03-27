@@ -152,11 +152,11 @@ public class ProjectTestMojo
         Project myProject = new ProjectImpl(project, listClassPaths(project, dependencyGraphBuilder));
         List<String> dependencyPaths = new ArrayList<>();
         //if (phaseType.equals("SOFIA") || phaseType.equals("SOFIA_HITS")) {
-            try {
-                dependencyPaths = new ArrayList<>(getDependencyPaths());
-            } catch (MojoExecutionException e) {
-                log.info(e.getMessage());
-            }
+        try {
+            dependencyPaths = new ArrayList<>(getDependencyPaths());
+        } catch (MojoExecutionException e) {
+            log.info(e.getMessage());
+        }
         //}
         config = new Config.ConfigBuilder(myProject)
                 .logger(mLogger)
