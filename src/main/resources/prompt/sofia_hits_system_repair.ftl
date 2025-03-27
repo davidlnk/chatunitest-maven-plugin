@@ -21,4 +21,13 @@ To help you correctly fix the unit test file, we provide the brief information a
     ```
 </#list>
 
+<#list ext_c_deps?keys as key>
+    The source code of external dependent class `${key}` is
+    ```${ext_c_deps[key]}```.
+</#list>
+<#list ext_m_deps?keys as key>
+    The source code of external dependent class `${key}` is
+    ```${ext_m_deps[key]}```.
+</#list>
+
 You have known enough for understanding and using the method-to-test. Please follow the user's instructions and requirements to fix the unit test provided by the user.

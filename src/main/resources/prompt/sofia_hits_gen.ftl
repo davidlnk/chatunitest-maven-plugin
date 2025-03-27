@@ -28,6 +28,15 @@ ${full_fm}
     ${value}
     ```
 </#list>
+
+<#list ext_c_deps?keys as key>
+    The source code of external dependent class `${key}` is
+    ```${ext_c_deps[key]}```.
+</#list>
+<#list ext_m_deps?keys as key>
+    The source code of external dependent class `${key}` is
+    ```${ext_m_deps[key]}```.
+</#list>
 Based on the information provided above, generate unit tests for code ${step_code}. The description of this code is ${step_desp}
 
 Now please generate a whole unit test file for the method-to-test.

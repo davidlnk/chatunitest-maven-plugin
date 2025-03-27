@@ -24,6 +24,15 @@ ${full_fm}
     ```
 </#list>
 
+<#list ext_c_deps?keys as key>
+    The source code of external dependent class `${key}` is
+    ```${ext_c_deps[key]}```.
+</#list>
+<#list ext_m_deps?keys as key>
+    The source code of external dependent class `${key}` is
+    ```${ext_m_deps[key]}```.
+</#list>
+
 <#-- Instructions for decomposing the method into slices -->
 ### Instructions on Decomposing the Method under Test into Slices
 
