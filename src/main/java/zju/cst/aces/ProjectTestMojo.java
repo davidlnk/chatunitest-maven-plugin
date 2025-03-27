@@ -32,10 +32,6 @@ import org.apache.maven.project.*;
 import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.graph.DependencyFilter;
-import org.eclipse.aether.util.filter.DependencyFilterUtils;
 import zju.cst.aces.api.Project;
 import zju.cst.aces.api.Task;
 import zju.cst.aces.api.config.Config;
@@ -131,6 +127,8 @@ public class ProjectTestMojo
     private RepositorySystem repositorySystem;
     public static Log log;
     public Config config;
+    @Parameter(property = "generateJsonReport", defaultValue = "false")
+    public boolean generateJsonReport;
 
 
     /**
@@ -191,6 +189,7 @@ public class ProjectTestMojo
                 .proxy(proxy)
                 .phaseType(phaseType)
                 .dependencyPaths(dependencyPaths)
+                .generateJsonReport(generateJsonReport)
                 .build();
         if(phaseType.equals("TELPA")){
             TelpaInit telpaInit=new TelpaInit();
