@@ -18,6 +18,9 @@ package zju.cst.aces;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -25,11 +28,14 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.DefaultProjectBuildingRequest;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.project.*;
+import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.util.filter.DependencyFilterUtils;
 import zju.cst.aces.api.Project;
 import zju.cst.aces.api.Task;
 import zju.cst.aces.api.config.Config;
@@ -114,13 +120,15 @@ public class ProjectTestMojo
     public int presencePenalty;
     @Parameter(property = "proxy",defaultValue = "null:-1")
     public String proxy;
-    @Parameter(property = "phaseType",defaultValue = "COVERUP")
+    @Parameter(property = "phaseType",defaultValue = "chatunitest")
     public String phaseType;
     @Parameter(property = "smartUnitTest_jar_path",defaultValue = "D:\\APP\\IdeaProjects\\chatunitest-maven-plugin-corporation\\src\\main\\resources\\smartut-master-1.1.0.jar")
     public String smartUnitTest_path;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     @Component(hint = "default")
     public DependencyGraphBuilder dependencyGraphBuilder;
+    @Component
+    private RepositorySystem repositorySystem;
     public static Log log;
     public Config config;
 
@@ -144,6 +152,14 @@ public class ProjectTestMojo
         log = getLog();
         MavenLogger mLogger = new MavenLogger(log);
         Project myProject = new ProjectImpl(project, listClassPaths(project, dependencyGraphBuilder));
+        List<String> dependencyPaths = new ArrayList<>();
+        if (phaseType.equals("SOFIA") || phaseType.equals("SOFIA_HITS")) {
+            try {
+                dependencyPaths = new ArrayList<>(getDependencyPaths());
+            } catch (MojoExecutionException e) {
+                log.info(e.getMessage());
+            }
+        }
         config = new Config.ConfigBuilder(myProject)
                 .logger(mLogger)
                 .promptPath(promptPath)
@@ -174,6 +190,7 @@ public class ProjectTestMojo
                 .presencePenalty(presencePenalty)
                 .proxy(proxy)
                 .phaseType(phaseType)
+                .dependencyPaths(dependencyPaths)
                 .build();
         if(phaseType.equals("TELPA")){
             TelpaInit telpaInit=new TelpaInit();
@@ -211,6 +228,38 @@ public class ProjectTestMojo
             System.out.println(e);
         }
         return classPaths;
+    }
+
+    public List<String> getDependencyPaths() throws MojoExecutionException {
+        List<String> dependencyPaths = new ArrayList<>();
+
+        // Ensure dependencies are resolved by using an explicit request
+        ArtifactResolutionRequest request = new ArtifactResolutionRequest();
+        request.setArtifact(project.getArtifact());
+        request.setResolveRoot(true);
+        request.setResolveTransitively(true);
+        request.setLocalRepository(session.getLocalRepository());
+        request.setRemoteRepositories(project.getRemoteArtifactRepositories());
+
+        // Resolve dependencies
+        ArtifactResolutionResult result = repositorySystem.resolve(request);
+
+        // Get resolved dependencies
+        Set<Artifact> artifacts = result.getArtifacts();
+        File projectArtifactFile = project.getArtifact().getFile(); // Get project's own artifact file
+
+        if (!artifacts.isEmpty()) {
+            for (Artifact artifact : artifacts) {
+                if (result.isSuccess()) {
+                    File jarFile = artifact.getFile();
+                    if (jarFile != null && jarFile.exists() && !jarFile.equals(projectArtifactFile)) {
+                        dependencyPaths.add(jarFile.getAbsolutePath());
+                    }
+                }
+            }
+        }
+
+        return dependencyPaths;
     }
 
 }
