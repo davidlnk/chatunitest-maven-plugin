@@ -15,6 +15,7 @@ Your task is writing JUnit tests.
 - No need to explain the code.
 - You must finish all generation in one response.
 - You shouldn't leave any spare work. Finish everything.
+- You must invoke the method by calling the method directly or by any other means, but ensure the method is executed in the test.
 
 # Test Coverage Strategy
 To maximize test coverage, follow these rules:
@@ -59,6 +60,7 @@ Include tests with:
 ## Mocking Behavior:
 Use Mockito to simulate alternative behaviors and failure modes of any dependencies.
 Mock both positive and negative responses, including exceptions.
+Never use openMocks method.
 
 # Information provided
 You will receive the following from the user:
