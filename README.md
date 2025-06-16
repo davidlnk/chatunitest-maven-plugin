@@ -71,6 +71,7 @@ Generally, you only need to provide the API key. **If you encounter an APIConnec
 - `obfuscate`: (**Optional**) Enable obfuscation to protect sensitive code. Default value: false.
 - `obfuscateGroupIds`: (**Optional**) Group IDs to be obfuscated. Default value includes only the current project's group ID. All these parameters can also be specified using the -D option in the command line.
 - `phaseType`: (**Optional**) Select the reproduction scheme; if not selected, the default chatunitest process will execute. All these parameters can also be specified using the -D option in the command line.
+- `generateJsonReport`: (**Optional**) Whether to generate a JSON report of the test generation process, default value: `false`. If set to true, a JSON file will be generated in the `testOutput` directory.
     - COVERUP
     - HITS
     - TELPA
